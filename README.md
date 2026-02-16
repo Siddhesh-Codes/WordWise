@@ -85,12 +85,6 @@ WordWise/
 
 ---
 
-## Screenshots
-
-_Coming soon_
-
----
-
 ## Contributing
 
 This is a personal project, but feel free to fork it and make it your own. If you find a bug or have a suggestion, open an issue.
