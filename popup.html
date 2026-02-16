@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordWise</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+
+    <!-- Onboarding Overlay -->
+    <div class="ww-onboarding" id="onboarding" style="display:none;">
+        <div class="ww-ob-content">
+            <div class="ww-ob-logo">W</div>
+            <h2 class="ww-ob-title">Welcome to WordWise!</h2>
+            <p class="ww-ob-subtitle">Your intelligent vocabulary companion</p>
+            <div class="ww-ob-features">
+                <div class="ww-ob-feature"><span>🔍</span> Select any word to see its meaning</div>
+                <div class="ww-ob-feature"><span>🧠</span> Quiz yourself with 4 quiz modes</div>
+                <div class="ww-ob-feature"><span>📈</span> Track mastery with spaced repetition</div>
+                <div class="ww-ob-feature"><span>🏆</span> Earn XP, level up, unlock badges</div>
+                <div class="ww-ob-feature"><span>🌍</span> Auto-translate to your language</div>
+            </div>
+            <div class="ww-ob-shortcut">
+                <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd>
+                <span>to define selected text</span>
+            </div>
+            <button class="ww-ob-start" id="startBtn">Let's Go! →</button>
+        </div>
+    </div>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confettiCanvas" class="ww-confetti"></canvas>
+
+    <!-- Header -->
+    <header class="ww-header">
+        <div class="ww-brand">
+            <div class="ww-logo">W</div>
+            <div class="ww-brand-text">
+                <span class="ww-brand-name">WordWise</span>
+                <span class="ww-brand-tagline" id="levelTitle">Novice 🌱</span>
+            </div>
+        </div>
+        <div class="ww-header-right">
+            <!-- XP Mini Bar -->
+            <div class="ww-xp-mini" title="Experience Points">
+                <div class="ww-xp-mini-bar">
+                    <div class="ww-xp-mini-fill" id="xpMiniFill" style="width:0%"></div>
+                </div>
+                <span class="ww-xp-mini-text" id="xpMiniText">Lv1</span>
+            </div>
+            <!-- Daily Goal Ring -->
+            <div class="ww-goal-ring" id="goalRing" title="Daily goal progress">
+                <svg viewBox="0 0 36 36" class="ww-goal-svg">
+                    <path class="ww-goal-bg"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="ww-goal-fill" id="goalFill" stroke-dasharray="0, 100"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <span class="ww-goal-text" id="goalText">0/5</span>
+            </div>
+            <!-- Streak -->
+            <div class="ww-streak" id="streakBadge" title="Daily streak">
+                <span class="ww-streak-icon">🔥</span>
+                <span class="ww-streak-count" id="streakCount">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="ww-tabs">
+        <button class="ww-tab active" data-tab="search"><span class="ww-tab-icon">🔍</span><span
+                class="ww-tab-label">Search</span></button>
+        <button class="ww-tab" data-tab="flashcards"><span class="ww-tab-icon">🎴</span><span
+                class="ww-tab-label">Cards</span></button>
+        <button class="ww-tab" data-tab="quiz"><span class="ww-tab-icon">🧠</span><span
+                class="ww-tab-label">Quiz</span></button>
+        <button class="ww-tab" data-tab="stats"><span class="ww-tab-icon">📊</span><span
+                class="ww-tab-label">Stats</span></button>
+        <button class="ww-tab" data-tab="settings"><span class="ww-tab-icon">⚙️</span><span
+                class="ww-tab-label">Settings</span></button>
+    </nav>
+
+    <!-- Tab Content -->
+    <div class="ww-content">
+
+        <!-- SEARCH TAB -->
+        <div class="ww-panel active" id="panel-search">
+            <div class="ww-search-bar">
+                <input type="text" id="searchInput" placeholder="Type a word to look up..." autocomplete="off"
+                    spellcheck="false">
+                <button id="searchBtn" class="ww-search-submit" title="Search">
+                    <svg viewBox="0 0 24 24" width="18" height="18">
+                        <path fill="currentColor"
+                            d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Word of the Day Card -->
+            <div class="ww-wotd-card" id="wotdCard" style="display:none;">
+                <div class="ww-wotd-label">✨ Word of the Day</div>
+                <div class="ww-wotd-word" id="wotdWord"></div>
+                <div class="ww-wotd-phonetic" id="wotdPhonetic"></div>
+                <div class="ww-wotd-def" id="wotdDef"></div>
+                <div class="ww-wotd-meta">
+                    <span class="ww-wotd-pos" id="wotdPos"></span>
+                    <span class="ww-wotd-diff" id="wotdDiff"></span>
+                </div>
+            </div>
+
+            <!-- Search Result -->
+            <div id="searchResult" style="display:none;"></div>
+
+            <!-- Recent Lookups -->
+            <div class="ww-section" id="recentSection">
+                <div class="ww-section-header">
+                    <span class="ww-section-title">Recent Lookups</span>
+                    <button class="ww-clear-btn" id="clearHistoryBtn" title="Clear all">Clear</button>
+                </div>
+                <div class="ww-history-list" id="historyList">
+                    <div class="ww-empty-state">No lookups yet. Select a word on any page!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FLASHCARDS TAB -->
+        <div class="ww-panel" id="panel-flashcards">
+            <div class="ww-flashcard-container" id="flashcardContainer">
+                <div class="ww-flashcard" id="flashcard">
+                    <div class="ww-flashcard-front" id="flashcardFront">
+                        <div class="ww-fc-word" id="fcWord">Loading...</div>
+                        <div class="ww-fc-phonetic" id="fcPhonetic"></div>
+                        <div class="ww-fc-mastery-bar">
+                            <div class="ww-fc-mastery-fill" id="fcMasteryFill"></div>
+                        </div>
+                        <div class="ww-fc-hint">Tap to reveal definition</div>
+                    </div>
+                    <div class="ww-flashcard-back" id="flashcardBack">
+                        <div class="ww-fc-pos" id="fcPos"></div>
+                        <div class="ww-fc-definition" id="fcDefinition"></div>
+                        <div class="ww-fc-example" id="fcExample"></div>
+                        <div class="ww-fc-etymology" id="fcEtymology"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="ww-sr-actions" id="srActions">
+                <button class="ww-sr-btn ww-sr-again" id="srAgain" title="Show again soon">🔄 Again</button>
+                <button class="ww-sr-btn ww-sr-hard" id="srHard" title="Hard">😬 Hard</button>
+                <button class="ww-sr-btn ww-sr-good" id="srGood" title="Good">👍 Good</button>
+                <button class="ww-sr-btn ww-sr-easy" id="srEasy" title="Easy">⭐ Easy</button>
+            </div>
+            <div class="ww-fc-progress" id="fcProgress"></div>
+            <div class="ww-fc-empty" id="fcEmpty" style="display:none;">
+                <div class="ww-empty-icon">🎴</div>
+                <div class="ww-empty-text">No words to study yet!</div>
+                <div class="ww-empty-hint">Look up some words on web pages first.</div>
+            </div>
+        </div>
+
+        <!-- QUIZ TAB -->
+        <div class="ww-panel" id="panel-quiz">
+            <!-- Quiz Type Selector -->
+            <div class="ww-quiz-types" id="quizTypes">
+                <button class="ww-quiz-type active" data-type="definition">📖 Definition</button>
+                <button class="ww-quiz-type" data-type="reverse">🔄 Reverse</button>
+                <button class="ww-quiz-type" data-type="fillblank">✏️ Fill Blank</button>
+                <button class="ww-quiz-type" data-type="spelling">🔊 Spelling</button>
+            </div>
+            <div class="ww-quiz-stats" id="quizStatsBar">
+                <span class="ww-quiz-stat"><strong id="qsCorrect">0</strong> correct</span>
+                <span class="ww-quiz-stat"><strong id="qsTotal">0</strong> total</span>
+                <span class="ww-quiz-stat">🔥 <strong id="qsStreak">0</strong></span>
+            </div>
+            <div class="ww-quiz-card" id="quizCard">
+                <div class="ww-quiz-prompt" id="quizPrompt">What does this word mean?</div>
+                <div class="ww-quiz-word" id="quizWord">...</div>
+                <div class="ww-quiz-diff" id="quizDiff"></div>
+                <div class="ww-quiz-clue" id="quizClue" style="display:none;"></div>
+                <!-- Spelling input -->
+                <div class="ww-quiz-spelling" id="quizSpelling" style="display:none;">
+                    <button class="ww-quiz-listen-btn" id="quizListenBtn">🔊 Listen</button>
+                    <input type="text" id="spellingInput" class="ww-spelling-input" placeholder="Type the word..."
+                        autocomplete="off" spellcheck="false">
+                    <button class="ww-quiz-submit-btn" id="spellingSubmit">Check →</button>
+                </div>
+                <div class="ww-quiz-options" id="quizOptions"></div>
+            </div>
+            <div class="ww-quiz-feedback" id="quizFeedback" style="display:none;"></div>
+            <button class="ww-quiz-next" id="quizNext" style="display:none;">Next Question →</button>
+            <div class="ww-fc-empty" id="quizEmpty" style="display:none;">
+                <div class="ww-empty-icon">🧠</div>
+                <div class="ww-empty-text">Need more words!</div>
+                <div class="ww-empty-hint">Look up at least 4 words to start the quiz.</div>
+            </div>
+        </div>
+
+        <!-- STATS TAB -->
+        <div class="ww-panel" id="panel-stats">
+            <!-- Vocab Strength Score -->
+            <div class="ww-strength-card" id="strengthCard">
+                <div class="ww-strength-ring">
+                    <svg viewBox="0 0 100 100" class="ww-strength-svg">
+                        <circle class="ww-str-bg" cx="50" cy="50" r="42" />
+                        <circle class="ww-str-fill" id="strFill" cx="50" cy="50" r="42" stroke-dasharray="0, 264" />
+                    </svg>
+                    <div class="ww-str-score" id="strScore">0</div>
+                </div>
+                <div class="ww-str-details">
+                    <div class="ww-str-grade" id="strGrade">Getting Started 🚀</div>
+                    <div class="ww-str-meta" id="strMeta"></div>
+                </div>
+            </div>
+
+            <!-- XP Progress Bar -->
+            <div class="ww-xp-card" id="xpCard">
+                <div class="ww-xp-header">
+                    <span class="ww-xp-level" id="xpLevel">🌱 Level 1 — Novice</span>
+                    <span class="ww-xp-total" id="xpTotal">0 XP</span>
+                </div>
+                <div class="ww-xp-bar">
+                    <div class="ww-xp-fill" id="xpFill" style="width:0%"></div>
+                </div>
+                <div class="ww-xp-next" id="xpNext">Next: 100 XP</div>
+            </div>
+
+            <div class="ww-stats-grid">
+                <div class="ww-stat-card ww-stat-total">
+                    <div class="ww-stat-value" id="statTotal">0</div>
+                    <div class="ww-stat-label">Total Lookups</div>
+                </div>
+                <div class="ww-stat-card ww-stat-unique">
+                    <div class="ww-stat-value" id="statUnique">0</div>
+                    <div class="ww-stat-label">Unique Words</div>
+                </div>
+                <div class="ww-stat-card ww-stat-streak">
+                    <div class="ww-stat-value" id="statStreak">0</div>
+                    <div class="ww-stat-label">Current Streak</div>
+                </div>
+                <div class="ww-stat-card ww-stat-best">
+                    <div class="ww-stat-value" id="statBest">0</div>
+                    <div class="ww-stat-label">Best Streak</div>
+                </div>
+            </div>
+
+            <div class="ww-section">
+                <div class="ww-section-title">Last 7 Days</div>
+                <div class="ww-activity-chart" id="activityChart"></div>
+            </div>
+
+            <div class="ww-section">
+                <div class="ww-section-title">Badges</div>
+                <div class="ww-badges-grid" id="badgesGrid"></div>
+            </div>
+
+            <div class="ww-section">
+                <div class="ww-section-header">
+                    <span class="ww-section-title">❤️ Favorites</span>
+                    <span class="ww-fav-count" id="favCount">0</span>
+                </div>
+                <div class="ww-favorites-list" id="favoritesList"></div>
+            </div>
+        </div>
+
+        <!-- SETTINGS TAB -->
+        <div class="ww-panel" id="panel-settings">
+            <div class="ww-settings-group">
+                <div class="ww-setting-label">Theme</div>
+                <div class="ww-theme-picker" id="themePicker">
+                    <button class="ww-theme-btn active" data-theme="dark" title="Dark"><span class="ww-theme-dot"
+                            style="background:linear-gradient(135deg,#1a1530,#2d1f5e)"></span> Dark</button>
+                    <button class="ww-theme-btn" data-theme="midnight" title="Midnight Blue"><span class="ww-theme-dot"
+                            style="background:linear-gradient(135deg,#0a1628,#1a2744)"></span> Midnight</button>
+                    <button class="ww-theme-btn" data-theme="amoled" title="AMOLED Black"><span class="ww-theme-dot"
+                            style="background:linear-gradient(135deg,#000,#111)"></span> AMOLED</button>
+                </div>
+            </div>
+
+            <div class="ww-settings-group">
+                <div class="ww-setting-label">Translation Language</div>
+                <select class="ww-select" id="settingLang">
+                    <option value="hi">Hindi (हिन्दी)</option>
+                    <option value="mr">Marathi (मराठी)</option>
+                    <option value="es">Spanish (Español)</option>
+                    <option value="fr">French (Français)</option>
+                    <option value="de">German (Deutsch)</option>
+                    <option value="ja">Japanese (日本語)</option>
+                    <option value="ko">Korean (한국어)</option>
+                    <option value="zh">Chinese (中文)</option>
+                    <option value="ar">Arabic (العربية)</option>
+                    <option value="pt">Portuguese (Português)</option>
+                    <option value="ru">Russian (Русский)</option>
+                    <option value="it">Italian (Italiano)</option>
+                    <option value="en">English (Disabled)</option>
+                </select>
+            </div>
+
+            <div class="ww-settings-group">
+                <div class="ww-setting-label">Daily Goal</div>
+                <div class="ww-goal-setter">
+                    <button class="ww-goal-adj" id="goalDown">−</button>
+                    <span class="ww-goal-value" id="goalValue">5</span>
+                    <span class="ww-goal-unit">words/day</span>
+                    <button class="ww-goal-adj" id="goalUp">+</button>
+                </div>
+            </div>
+
+            <div class="ww-settings-group">
+                <div class="ww-setting-row">
+                    <span class="ww-setting-label">Study Reminders</span>
+                    <label class="ww-toggle">
+                        <input type="checkbox" id="settingReminders" checked>
+                        <span class="ww-toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="ww-setting-hint">Get badge notifications when words need review</div>
+            </div>
+
+            <div class="ww-settings-group">
+                <div class="ww-setting-row">
+                    <span class="ww-setting-label">Sound Effects</span>
+                    <label class="ww-toggle">
+                        <input type="checkbox" id="settingSound" checked>
+                        <span class="ww-toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="ww-settings-group">
+                <div class="ww-setting-label">Export Vocabulary</div>
+                <button class="ww-export-btn" id="exportBtn">📤 Download CSV</button>
+                <div class="ww-setting-hint">Export all words (incl. mastery %) for Anki, Quizlet, or spreadsheets.
+                </div>
+            </div>
+
+            <div class="ww-settings-group">
+                <div class="ww-setting-label">Keyboard Shortcut</div>
+                <div class="ww-shortcut-display"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd></div>
+                <div class="ww-setting-hint">Select a word on any page, press the shortcut to define it.</div>
+            </div>
+
+            <div class="ww-settings-group">
+                <div class="ww-setting-label">Danger Zone</div>
+                <button class="ww-danger-btn" id="resetBtn">🗑️ Reset All Data</button>
+                <div class="ww-setting-hint">This will clear all vocabulary, stats, XP, and badges. Cannot be undone.
+                </div>
+            </div>
+
+            <div class="ww-about">
+                <div class="ww-about-name">WordWise v2.2.0</div>
+                <div class="ww-about-desc">The ultimate vocabulary companion</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

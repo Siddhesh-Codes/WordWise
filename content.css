@@ -1,0 +1,486 @@
+/* ============================================================
+   WordWise — Content Tooltip Styles (Dark Theme)
+   Premium glassmorphism design with difficulty badges,
+   favorites, and smooth animations
+   ============================================================ */
+
+/* ---- Tooltip Container ---- */
+.tt-ext-tooltip {
+  position: fixed;
+  z-index: 2147483647;
+  width: 370px;
+  max-height: 450px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 16px;
+  font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #e8e6f0;
+  background: rgba(22, 18, 42, 0.96);
+  border: 1px solid rgba(108, 60, 225, 0.25);
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 8px 30px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(108, 60, 225, 0.1);
+  padding: 0;
+  opacity: 0;
+  transform: translateY(6px) scale(0.97);
+  animation: tt-ext-fadeIn 0.25s ease-out forwards;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(108, 60, 225, 0.3) transparent;
+}
+
+.tt-ext-tooltip::-webkit-scrollbar {
+  width: 5px;
+}
+
+.tt-ext-tooltip::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tt-ext-tooltip::-webkit-scrollbar-thumb {
+  background: rgba(108, 60, 225, 0.3);
+  border-radius: 10px;
+}
+
+@keyframes tt-ext-fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ---- Header ---- */
+.tt-ext-header {
+  padding: 16px 18px 14px;
+  background: linear-gradient(135deg, rgba(108, 60, 225, 0.2), rgba(79, 143, 255, 0.1));
+  border-bottom: 1px solid rgba(108, 60, 225, 0.15);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.tt-ext-header-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-ext-header-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.tt-ext-word-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tt-ext-word {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: capitalize;
+  letter-spacing: -0.01em;
+}
+
+.tt-ext-phonetic {
+  font-size: 13px;
+  color: #a78bfa;
+  font-style: italic;
+}
+
+.tt-ext-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 7px;
+  flex-wrap: wrap;
+}
+
+/* Part of speech tag */
+.tt-ext-pos-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(108, 60, 225, 0.25);
+  color: #c4b5fd;
+}
+
+/* Difficulty badge */
+.tt-ext-diff-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ---- Audio Button ---- */
+.tt-ext-audio-btn {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6C3CE1, #4F8FFF);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(108, 60, 225, 0.3);
+}
+
+.tt-ext-audio-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.tt-ext-audio-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 3px 12px rgba(108, 60, 225, 0.5);
+}
+
+.tt-ext-audio-btn:active {
+  transform: scale(0.95);
+}
+
+.tt-ext-audio-btn.tt-ext-playing {
+  animation: tt-ext-pulse-audio 0.5s ease;
+}
+
+@keyframes tt-ext-pulse-audio {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* ---- Favorite Button ---- */
+.tt-ext-fav-btn {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.tt-ext-fav-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  transition: transform 0.25s ease;
+}
+
+.tt-ext-fav-btn:hover {
+  background: rgba(248, 113, 113, 0.1);
+  color: #f87171;
+}
+
+.tt-ext-fav-btn:hover svg {
+  transform: scale(1.15);
+}
+
+.tt-ext-fav-active {
+  color: #f87171 !important;
+  background: rgba(248, 113, 113, 0.15) !important;
+}
+
+.tt-ext-fav-active svg {
+  animation: tt-ext-heart-pop 0.4s ease;
+}
+
+@keyframes tt-ext-heart-pop {
+  0% {
+    transform: scale(1);
+  }
+
+  40% {
+    transform: scale(1.35);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ---- Body ---- */
+.tt-ext-body {
+  padding: 14px 18px 10px;
+}
+
+.tt-ext-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tt-ext-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(108, 60, 225, 0.2), transparent);
+}
+
+/* Definition */
+.tt-ext-definition {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #d4d0e0;
+  margin-bottom: 10px;
+}
+
+/* Translation */
+.tt-ext-translation {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(79, 143, 255, 0.08);
+  border: 1px solid rgba(79, 143, 255, 0.15);
+  font-size: 14px;
+  font-weight: 500;
+  color: #93bbff;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tt-ext-trans-icon {
+  font-size: 14px;
+}
+
+/* Etymology */
+.tt-ext-etymology {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(251, 191, 36, 0.06);
+  border: 1px solid rgba(251, 191, 36, 0.12);
+  font-size: 12px;
+  font-style: italic;
+  color: #d4a85c;
+  margin-bottom: 14px;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.tt-ext-ety-icon {
+  font-size: 13px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Examples */
+.tt-ext-examples {
+  margin-bottom: 14px;
+}
+
+.tt-ext-example {
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  border-radius: 10px;
+  background: rgba(108, 60, 225, 0.08);
+  border-left: 3px solid #7c3aed;
+  font-size: 13px;
+  font-style: italic;
+  color: #c4b5fd;
+  line-height: 1.5;
+}
+
+.tt-ext-example-num {
+  font-style: normal;
+  font-weight: 700;
+  color: #a78bfa;
+  margin-right: 4px;
+}
+
+/* Chips (synonyms/antonyms) */
+.tt-ext-chips-section {
+  margin-bottom: 12px;
+}
+
+.tt-ext-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tt-ext-synonym-chip {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  background: rgba(79, 143, 255, 0.12);
+  color: #93bbff;
+  border: 1px solid rgba(79, 143, 255, 0.25);
+  transition: all 0.2s ease;
+}
+
+.tt-ext-synonym-chip:hover {
+  background: rgba(79, 143, 255, 0.25);
+  color: #bdd5ff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(79, 143, 255, 0.15);
+}
+
+.tt-ext-antonym-chip {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  background: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* ---- Footer ---- */
+.tt-ext-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  padding: 8px 14px;
+  border-top: 1px solid rgba(108, 60, 225, 0.15);
+}
+
+.tt-ext-footer-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-family: inherit;
+  color: #a78bfa;
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.tt-ext-footer-btn:hover {
+  background: rgba(108, 60, 225, 0.12);
+  color: #c4b5fd;
+}
+
+.tt-ext-footer-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+/* ---- Loading State ---- */
+.tt-ext-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px;
+  gap: 14px;
+}
+
+.tt-ext-loading-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(108, 60, 225, 0.15);
+  border-top-color: #6C3CE1;
+  border-radius: 50%;
+  animation: tt-ext-spin 0.7s linear infinite;
+}
+
+@keyframes tt-ext-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.tt-ext-loading-text {
+  font-size: 13px;
+  color: #a78bfa;
+}
+
+/* ---- Error State ---- */
+.tt-ext-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 20px;
+  gap: 10px;
+  text-align: center;
+}
+
+.tt-ext-error-icon {
+  font-size: 28px;
+}
+
+.tt-ext-error-text {
+  font-size: 13px;
+  color: #d4d0e0;
+  line-height: 1.5;
+}
+
+/* ---- Copied Toast ---- */
+.tt-ext-copied-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #6C3CE1, #4F8FFF);
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 24px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(108, 60, 225, 0.4);
+  z-index: 2147483647;
+  animation: tt-ext-toast-in 0.3s ease-out;
+}
+
+@keyframes tt-ext-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
